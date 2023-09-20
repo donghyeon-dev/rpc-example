@@ -1,0 +1,9 @@
+### getSpanId
+GET http://localhost:8080/rpc/span
+Content-Type: application/json
+
+### getTraceId
+GET http://localhost:8080/rpc/trace
+Content-Type: application/json
+
+###
