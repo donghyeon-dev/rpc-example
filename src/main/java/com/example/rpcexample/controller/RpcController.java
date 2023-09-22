@@ -21,15 +21,13 @@ public class RpcController {
     public String getSpanId(){
         log.info("getSpanId Start");
         log.info("now traceId = {}", tracer.currentSpan().context().traceIdString());
-        String spanId = contextClient.getSpanId();
-        return spanId;
+        return contextClient.getSpanId();
     }
 
     @GetMapping("/trace")
     public String getTraceId(){
         log.info("getTraceId Start");
         log.info("now spanId = {}", tracer.currentSpan().context().spanIdString());
-        String traceId = contextClient.getTraceId();
-        return traceId;
+        return contextClient.getTraceId();
     }
 }
