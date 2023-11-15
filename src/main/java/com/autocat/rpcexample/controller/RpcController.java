@@ -1,7 +1,7 @@
-package com.example.rpcexample.controller;
+package com.autocat.rpcexample.controller;
 
 import brave.Tracer;
-import com.example.rpcexample.feign.ContextClient;
+import com.autocat.rpcexample.feign.ContextClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

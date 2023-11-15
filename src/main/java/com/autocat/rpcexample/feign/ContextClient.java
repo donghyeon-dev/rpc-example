@@ -1,10 +1,10 @@
-package com.example.rpcexample.feign;
+package com.autocat.rpcexample.feign;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient( name="CTX", url="localhost:8888")
+@FeignClient( name="CTX", url= "localhost:8989")
 public interface ContextClient {
 
     @GetMapping("/context/span-id")

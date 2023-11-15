@@ -1,3 +1,5 @@
 spring:
   application:
     name: rpc
+  zipkin:
+    base-url: http://223.130.146.114:9411
