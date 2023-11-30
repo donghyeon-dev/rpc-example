@@ -3,3 +3,7 @@ spring:
     name: rpc
   zipkin:
     base-url: http://223.130.146.114:9411
+
+logging:
+  level:
+    org.springframework.cloud.sleuth: DEBUG

@@ -4,6 +4,9 @@ services:
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
+    environment:
+      - STORAGE_TYPE= elasticsearch
+      - ES_HOSTS=http= http://elasticsearch:9200
     ports:
       - "9411:9411"
   logstash:
@@ -25,7 +28,7 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - cluster.name=docker-cluster # cluste.rname으로 node들이 join된다.
-      - bootstrap.memory_lock=true
+      - bootstrap.memory_lock=true # 프로세스가 가상메모리를 사용할지 여부(메모리 스와핑 방지 = 성능향상목적)
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -42,7 +45,7 @@ services:
     image: docker.elastic.co/kibana/kibana:7.12.0
     container_name: kibana
     environment:
-      ELASTICSEARCH_HOSTS: "http://elasticsearch:920uuuuuuuuuuuu0"
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
     ports:
       - "5601:5601"
     depends_on:
