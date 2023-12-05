@@ -1,34 +1,42 @@
-name: composed-container
+name: elkz-container
 
 services:
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
     environment:
-      - STORAGE_TYPE= elasticsearch
-      - ES_HOSTS=http= http://elasticsearch:9200
+      - STORAGE_TYPE=elasticsearch
+      - "ES_HOSTS=http://elasticsearch:9200"
     ports:
       - "9411:9411"
+    networks:
+      - elk
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
   logstash:
     image: docker.elastic.co/logstash/logstash:7.12.0
     container_name: logstash
     command: logstash -f /etc/logstash/conf.d/logstash.conf
     volumes:
-      - ./config/logstash.config:/etc/logstash/conf.d/logstash.conf # Volumes마운트시에 폴더로는 마운트가 되지 않아 타겟파일을 지정하고 마운트함 개고생함
+      - ./config:/etc/logstash/conf.d
     ports:
       - "5000:5000"
     networks:
       - elk
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
     container_name: elasticsearch
     environment:
       - node.name=elasticsearch
       - discovery.type=single-node
-      - cluster.name=docker-cluster # cluste.rname으로 node들이 join된다.
-      - bootstrap.memory_lock=true # 프로세스가 가상메모리를 사용할지 여부(메모리 스와핑 방지 = 성능향상목적)
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -41,6 +49,12 @@ services:
       - "9300:9300"
     networks:
       - elk
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9200" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.12.0
     container_name: kibana
@@ -48,10 +62,12 @@ services:
       ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
     ports:
       - "5601:5601"
-    depends_on:
-      - elasticsearch
     networks:
       - elk
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
 volumes:
   elasticsearch-data:
     driver: local

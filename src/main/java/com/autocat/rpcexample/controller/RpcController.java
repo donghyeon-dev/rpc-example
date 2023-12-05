@@ -43,15 +43,26 @@ public class RpcController {
 
     @GetMapping("/async")
     public String asyncTest() {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 500; i++) {
             CompletableFuture.runAsync(() -> {
                 log.info("customtraceableExecutor thread {}", Thread.currentThread().getName());
             }, customtraceableExecutor);
         }
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 400; i++) {
             CompletableFuture.runAsync(() -> {
-                log.info("threadPoolTaskExecutor thread {}", Thread.currentThread().getName());
-            }, threadPoolTaskExecutor);
+                log.debug("customtraceableExecutor thread {}", Thread.currentThread().getName());
+            }, customtraceableExecutor);
+        }
+
+        for (int i = 0; i < 20; i++) {
+            CompletableFuture.runAsync(() -> {
+                log.warn("customtraceableExecutor thread {}", Thread.currentThread().getName());
+            }, customtraceableExecutor);
+        }
+        for (int i = 0; i < 5; i++) {
+            CompletableFuture.runAsync(() -> {
+                log.info("customtraceableExecutor thread {}", Thread.currentThread().getName());
+            }, customtraceableExecutor);
         }
 
         // Ensure all tasks are done
